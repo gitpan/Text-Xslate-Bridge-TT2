@@ -4,48 +4,88 @@ use 5.008_001;
 use strict;
 use warnings;
 
-our $VERSION = '1.0000';
+our $VERSION = '1.0001';
 
 use parent qw(Text::Xslate::Bridge);
-use Template::VMethods;
+use Template::VMethods ();
+use Template::Filters  ();
+use Carp ();
+
+my $ThisClass    = __PACKAGE__;
+my $DummyContext = bless {}, $ThisClass . '::DummyContext';
+
+my %Function = %{$Template::Filters::FILTERS};
+
+delete $Function{html}; # builtin
+
+
+while(my($name, $filter) = each %Function) {
+    if(ref($filter) eq 'ARRAY') {
+        my($body, $is_dynamic) = @{$filter};
+
+        $Function{$name} = sub {
+            return $body->($DummyContext, @_);
+        };
+    }
+}
 
 __PACKAGE__->bridge(
-    scalar => $Template::VMethods::TEXT_VMETHODS,
-    array  => $Template::VMethods::LIST_VMETHODS,
-    hash   => $Template::VMethods::HASH_VMETHODS,
+    scalar   => $Template::VMethods::TEXT_VMETHODS,
+    array    => $Template::VMethods::LIST_VMETHODS,
+    hash     => $Template::VMethods::HASH_VMETHODS,
+
+    function => \%Function,
 );
 
+package
+    Text::Xslate::Bridge::TT2::DummyContext;
+
+sub AUTOLOAD {
+    Carp::croak("Template-Toolkit specific features are not supported in $ThisClass");
+}
+
+sub DESTROY { }
 1;
 __END__
 
 =head1 NAME
 
-Text::Xslate::Bridge::TT2 - Template-Toolkit virtual methods for Xslate
+Text::Xslate::Bridge::TT2 - Template-Toolkit virtual methods and filters for Xslate
 
 =head1 VERSION
 
-This document describes Text::Xslate::Bridge::TT2 version 1.0000.
+This document describes Text::Xslate::Bridge::TT2 version 1.0001.
 
 =head1 SYNOPSIS
 
-    use Text::Xslate::Bridge::TT2;
+    use Text::Xslate;
 
     my $xslate = Text::Xslate->new(
-        function => { Text::Xslate::Bridge::TT2->methods },
+        module => ['Text::Xslate::Bridge::TT2'],
     );
 
     print $xslate->render_string('<: "foo".length() :>'); # => 3
 
 =head1 DESCRIPTION
 
-Template-Toolkit sucks, but has a few useful features. Virtual methods is such a feature.
-This module provides Xslate with Template-Toolkit virtual methods.
+Template-Toolkit sucks, but has a few useful features.
+Virtual methods and filters are such a feature.
+This module provides Xslate with Template-Toolkit virtual methods and filters.
 
-=head1 INTERFACE
+=head1 CAVEAT
 
-=head2 Class methods
+=head2 Limitation of dynamic filters
 
-=head3 C<< Text::Xslate::Bridge::TT2->methods() -> %methods >>
+All the dynamic filters require parens (i.e. to "call" them first),
+even if you want to omit their arguments.
+
+    [% FILTER repeat   # doesn't work! %]
+    [% FILTER repeat() # works. %]
+
+=head2 Unsupported features
+
+Filters that require Template-Toolkit context object are not supported,
+which include C<eval>, C<evaltt>, C<perl>, C<evalperl> and C<redirect>.
 
 =head1 DEPENDENCIES
 

@@ -13,7 +13,8 @@ MANIFEST.SKIP
 META.yml
 README
 t/000_load.t
-t/001_basic.t
+t/001_methods.t
+t/002_filters.t
 xt/01_podspell.t
 xt/02_pod.t
 xt/03_pod-coverage.t
