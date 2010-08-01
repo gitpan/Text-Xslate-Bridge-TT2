@@ -28,4 +28,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com/gfx/p5-Text-Xslate-Bridge-TT2.git
-version: 1.0001
+version: 1.0002
