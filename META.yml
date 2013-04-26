@@ -1,31 +1,42 @@
 ---
-abstract: 'Template-Toolkit virtual methods and filters for Xslate'
+abstract: 'Template-Toolkit virtual methods and filters for Xslate (deprecated)'
 author:
-  - 'Goro Fuji (gfx) <gfuji(at)cpan.org>'
+  - 'Fuji, Goro (gfx) <gfuji@cpan.org>'
 build_requires:
-  ExtUtils::MakeMaker: 6.42
   Test::More: 0.88
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
-distribution_type: module
-generated_by: 'Module::Install version 1.00'
+  CPAN::Meta: 0
+  CPAN::Meta::Prereqs: 0
+  Module::Build: 0.38
+dynamic_config: 0
+generated_by: 'Minilla/v0.0.56, CPAN::Meta::Converter version 2.130880'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-module_name: Text::Xslate::Bridge::TT2
 name: Text-Xslate-Bridge-TT2
 no_index:
   directory:
-    - inc
     - t
     - xt
+    - inc
+    - share
+    - eg
+    - examples
+    - author
+provides:
+  Text::Xslate::Bridge::TT2:
+    file: lib/Text/Xslate/Bridge/TT2.pm
+    version: 1.0003
 requires:
   Template: 2
   Text::Xslate: 0.1045
   parent: 0.2
-  perl: 5.8.1
+  perl: 5.008001
 resources:
-  license: http://dev.perl.org/licenses/
-  repository: git://github.com/gfx/p5-Text-Xslate-Bridge-TT2.git
-version: 1.0002
+  bugtracker: https://github.com/xslate/p5-Text-Xslate-Bridge-TT2/issues
+  homepage: https://github.com/xslate/p5-Text-Xslate-Bridge-TT2
+  repository: git://github.com/xslate/p5-Text-Xslate-Bridge-TT2.git
+version: 1.0003
+x_contributors:
+  - 'Fuji, Goro <g.psy.va@gmail.com>'
